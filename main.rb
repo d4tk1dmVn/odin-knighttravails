@@ -62,13 +62,12 @@ def bfs_over_chessboard(start_square, end_square)
   referrer_squares = {}
   until queue.empty?
     current_square = queue.shift
-    break if current_square == end_square
-
     calculate_neighbours(*current_square).each do |neighbour|
       next if unvisited_squares.delete?(neighbour).nil?
 
       queue.append(neighbour)
       referrer_squares[neighbour] = current_square
+      return referrer_squares if current_square == end_square
     end
   end
   referrer_squares
@@ -78,7 +77,7 @@ def calculate_path(start_square, end_square)
   referrer_squares = bfs_over_chessboard(start_square, end_square)
   result = []
   current_square = end_square
-  until current_square == start_square
+  while referrer_squares.include?(current_square)
     result.push(current_square)
     current_square = referrer_squares[current_square]
   end
